@@ -24,5 +24,7 @@ public class Entregador {
     private String pais;
     private String placa;
     private String renavam;
+    @Transient
+    private Conta conta;
 
 }

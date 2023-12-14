@@ -57,6 +57,11 @@ class EntregadorServiceTest {
         boolean renavam = entregadorService.renavamIsValid("12345678910", 2013);
         Assertions.assertTrue(renavam);
     }
+    @Test
+    void testandoSantanderAtual(){
+        boolean conta = entregadorService.validaConta("12345678-0", "1234","CC","Santander");
+        Assertions.assertTrue(conta);
+    }
 
     @Test
     void testandoCpfInvalido() {
@@ -105,4 +110,11 @@ class EntregadorServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class,
                 ()-> entregadorService.renavamIsValid("123456789", 2013));
     }
+
+    @Test
+    void testandoContaSantanderInvalida(){
+        Assertions.assertThrows(IllegalArgumentException.class,
+                ()-> entregadorService.validaConta("12345678-01", "1234","CC","Santander"));
+    }
+
 }

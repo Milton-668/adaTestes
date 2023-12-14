@@ -14,15 +14,25 @@ public class EntregadorService {
     EntregadorRepository entregadorRepository;
     private final String BRASIL = "Brasil";
     private final String ARGENTINA = "Argentina";
+    private final String SA = "Santander";
+    private final String CC = "CC";
 
     public Entregador save(Entregador entregador) {
+        validador(entregador);
+        return entregadorRepository.save(entregador);
+    }
+
+    private void validador(Entregador entregador) {
         cpfIsValido(entregador.getCpf());
         rgIsValido(entregador.getRg());
         cnhIsValid(entregador.getCnh());
         modeloIsValid(entregador.getAnoModelo());
         placaIsValid(entregador.getPlaca(), entregador.getPais());
         renavamIsValid(entregador.getRenavam(), entregador.getAnoModelo());
-        return entregadorRepository.save(entregador);
+        validaConta(entregador.getConta().getConta(),
+                entregador.getConta().getAgencia(),
+                entregador.getConta().getTipoConta(),
+                entregador.getConta().getBanco());
     }
 
     public boolean cpfIsValido(String cpf) {
@@ -90,6 +100,17 @@ public class EntregadorService {
                 return true;
             } else {
                 throw new IllegalArgumentException("Placa incorreta");
+            }
+        }
+        return false;
+    }
+
+    public boolean validaConta(String conta, String agencia, String tipo, String banco) {
+        if (banco.equals(SA) && tipo.equals(CC)) {
+            if (conta.matches("[0-9]{8}[-][0-9]") && agencia.matches("\\d{4}")) {
+                return true;
+            } else {
+                throw new IllegalArgumentException("Algo na conta incorreto");
             }
         }
         return false;
